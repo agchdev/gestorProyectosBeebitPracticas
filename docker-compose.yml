@@ -1,0 +1,47 @@
+
+services:
+  database:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: beebitGP
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nest_api
+    restart: always
+    depends_on:
+      - database
+    ports:
+      - "3001:3001"
+    environment:
+      DATABASE_URL: postgres://user:password@database:5432/mydatabase
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+  frontend:
+      build:
+        context: ./frontend
+        dockerfile: Dockerfile
+      container_name: next_frontend
+      ports:
+        - "3000:3000"
+      environment:
+        - NODE_ENV=development
+      volumes:
+        - ./frontend:/app
+        - /app/node_modules
+      depends_on:
+        - api
+volumes:
+  postgres_data:
+    driver: local
