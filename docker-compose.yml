@@ -1,7 +1,6 @@
-
 services:
   database:
-    image: postgres:15
+    image: bitnami/postgresql:15
     container_name: postgres_db
     restart: always
     ports:
@@ -13,7 +12,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  api:
+  api:  # <-- ESTE NIVEL ESTABA MAL ANTES
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -23,25 +22,27 @@ services:
       - database
     ports:
       - "3001:3001"
-    environment:
-      DATABASE_URL: postgres://user:password@database:5432/mydatabase
+    env_file:
+      - ./backend/.env
     volumes:
       - ./backend:/app
       - /app/node_modules
+
   frontend:
-      build:
-        context: ./frontend
-        dockerfile: Dockerfile
-      container_name: next_frontend
-      ports:
-        - "3000:3000"
-      environment:
-        - NODE_ENV=development
-      volumes:
-        - ./frontend:/app
-        - /app/node_modules
-      depends_on:
-        - api
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: next_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - api
+
 volumes:
   postgres_data:
     driver: local
