@@ -15,8 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('Debe retornar "¡La API está funcionando correctamente!"', () => {
+      expect(appController.getHello()).toBe('¡La API está funcionando correctamente!');
     });
   });
 });
