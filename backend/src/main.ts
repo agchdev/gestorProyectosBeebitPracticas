@@ -10,6 +10,7 @@ async function bootstrap() {
     .setTitle('Gestor de Proyectos API') // Titulo
     .setDescription('Documentación de la API del gestor de proyectos') // Una descripcion
     .setVersion('1.0') // Version
+    .addTag('users') // Puedo agregar mas tags para cada recurso
     .build(); // Que se mande a construir
 
   const document = SwaggerModule.createDocument(app, config);
